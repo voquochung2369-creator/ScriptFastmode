@@ -1,0 +1,27 @@
+local FastMode = true -- true = bật | false = không làm gì
+
+if not FastMode then return end
+
+local function apply(v)
+    if v:IsA("BasePart") then
+        v.Material = Enum.Material.SmoothPlastic
+        v.CastShadow = false
+        v.MaterialVariant = ""
+    elseif v:IsA("ParticleEmitter") or v:IsA("Trail") or v:IsA("Beam") or v:IsA("Smoke") or v:IsA("Fire") or v:IsA("Sparkles") then
+        v.Enabled = false
+    elseif v:IsA("Decal") or v:IsA("Texture") then
+        v.Transparency = 1
+    end
+end
+
+task.spawn(function()
+    local list = workspace:GetDescendants()
+    for i = 1, #list do
+        apply(list[i])
+        if i % 250 == 0 then
+            task.wait()
+        end
+    end
+end)
+
+workspace.DescendantAdded:Connect(apply)
