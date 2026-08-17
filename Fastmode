@@ -1,4 +1,4 @@
-local FastMode = true -- true = bật | false = không làm gì
+local FastMode = true
 
 if not FastMode then return end
 
