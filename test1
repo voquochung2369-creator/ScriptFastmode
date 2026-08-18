@@ -209,20 +209,20 @@ local function UpdateMenuScale()
 
     local Viewport = Camera.ViewportSize
 
-    local Scale = math.min(
-        Viewport.X / 1920,
-        Viewport.Y / 1080
-    )
+local Scale = math.min(
+    Viewport.X / 1600,
+    Viewport.Y / 900
+)
 
-    if Scale < 0.65 then
-        Scale = 0.65
-    end
+if Scale < 0.75 then
+    Scale = 0.75
+end
 
-    if Scale > 1 then
-        Scale = 1
-    end
+if Scale > 1.25 then
+    Scale = 1.25
+end
 
-    MenuScale.Scale = Scale
+MenuScale.Scale = Scale
 end
 
 UpdateMenuScale()
