@@ -1,5 +1,3 @@
-Được. Đây là full script, giữ nguyên các chức năng hiện tại và chỉ thêm Responsive Menu Scale để MenuUi tự co giãn theo kích thước màn hình.
-
 local Players = game:GetService("Players")
 local UserInputService = game:GetService("UserInputService")
 local CoreGui = game:GetService("CoreGui")
@@ -162,7 +160,7 @@ HubCorner.CornerRadius = UDim.new(1, 0)
 HubCorner.Parent = HubButton
 
 --------------------------------------------------
--- VIỀN HUBUI
+-- VIỀN TRÒN HUBUI
 --------------------------------------------------
 
 local HubStroke = Instance.new("UIStroke")
@@ -170,6 +168,9 @@ HubStroke.Name = "HubCircleStroke"
 HubStroke.Color = Color3.fromRGB(255, 255, 255)
 HubStroke.ApplyStrokeMode = Enum.ApplyStrokeMode.Border
 HubStroke.Parent = HubButton
+
+-- Khi đang ẩn:
+-- viền nhỏ và hơi mờ
 HubStroke.Thickness = 1
 HubStroke.Transparency = 0.45
 
@@ -192,6 +193,52 @@ MenuContainer.Position = UDim2.new(0.5, -325, 0.5, -200)
 MenuContainer.BackgroundColor3 = Color3.fromRGB(60, 60, 60)
 MenuContainer.BorderSizePixel = 0
 
+--------------------------------------------------
+-- MENU SCALE ONLY
+--------------------------------------------------
+
+local MenuScale = Instance.new("UIScale")
+MenuScale.Parent = MenuContainer
+
+local function UpdateMenuScale()
+    local Camera = workspace.CurrentCamera
+
+    if not Camera then
+        return
+    end
+
+    local Viewport = Camera.ViewportSize
+
+    local Scale = math.min(
+        Viewport.X / 1920,
+        Viewport.Y / 1080
+    )
+
+    if Scale < 0.65 then
+        Scale = 0.65
+    end
+
+    if Scale > 1 then
+        Scale = 1
+    end
+
+    MenuScale.Scale = Scale
+end
+
+UpdateMenuScale()
+
+workspace:GetPropertyChangedSignal("CurrentCamera"):Connect(function()
+    task.wait()
+
+    UpdateMenuScale()
+end)
+
+if workspace.CurrentCamera then
+    workspace.CurrentCamera:GetPropertyChangedSignal("ViewportSize"):Connect(function()
+        UpdateMenuScale()
+    end)
+end
+
 local MenuCorner = Instance.new("UICorner")
 MenuCorner.CornerRadius = UDim.new(0, 12)
 MenuCorner.Parent = MenuContainer
@@ -200,77 +247,6 @@ local MenuStroke = Instance.new("UIStroke")
 MenuStroke.Color = Color3.fromRGB(120, 120, 120)
 MenuStroke.Thickness = 1
 MenuStroke.Parent = MenuContainer
-
---------------------------------------------------
--- RESPONSIVE MENU SCALE
---------------------------------------------------
-
-local Camera = workspace.CurrentCamera
-
-local MenuScale = Instance.new("UIScale")
-MenuScale.Name = "ResponsiveScale"
-MenuScale.Scale = 1
-MenuScale.Parent = MenuContainer
-
-local function UpdateMenuScale()
-    if not Camera then
-        Camera = workspace.CurrentCamera
-    end
-
-    if not Camera then
-        return
-    end
-
-    local viewport = Camera.ViewportSize
-
-    local screenWidth = viewport.X
-    local screenHeight = viewport.Y
-
-    local baseWidth = 650
-    local baseHeight = 400
-
-    local widthScale = (screenWidth * 0.90) / baseWidth
-    local heightScale = (screenHeight * 0.90) / baseHeight
-
-    local scale = math.min(widthScale, heightScale)
-
-    if scale < 0.65 then
-        scale = 0.65
-    end
-
-    if scale > 1.15 then
-        scale = 1.15
-    end
-
-    MenuScale.Scale = scale
-
-    MenuContainer.Position = UDim2.new(
-        0.5,
-        -(baseWidth * scale) / 2,
-        0.5,
-        -(baseHeight * scale) / 2
-    )
-end
-
-UpdateMenuScale()
-
-if Camera then
-    Camera:GetPropertyChangedSignal("ViewportSize"):Connect(function()
-        UpdateMenuScale()
-    end)
-end
-
-workspace:GetPropertyChangedSignal("CurrentCamera"):Connect(function()
-    Camera = workspace.CurrentCamera
-
-    if Camera then
-        UpdateMenuScale()
-
-        Camera:GetPropertyChangedSignal("ViewportSize"):Connect(function()
-            UpdateMenuScale()
-        end)
-    end
-end)
 
 --------------------------------------------------
 -- TOP BAR
@@ -857,37 +833,21 @@ Bloxfruit:AddButton({
     Name = "Real Kid",
     Click = "Button",
     Callback = function()
-        repeat
-            task.wait(2)
-        until game:IsLoaded()
+        loadstring(game:HttpGet("https://raw.githubusercontent.com/realkidhub/realkid/refs/heads/main/main.lua"))()
     end
 })
 
-Bloxfruit2:AddButton({
-    Name = "Test 2",
-    Click = "Button",
-    Callback = function()
-    end
-})
-
-Bloxfruit3:AddButton({
-    Name = "Test 3",
-    Click = "Button",
-    Callback = function()
-    end
-})
-
-Bloxfruit4:AddButton({
-    Name = "Test Lever",
-    Click = "Lever",
-    Default = false,
-    Save = false,
-    Callback = function(Value)
-        if Value then
-        else
-        end
-    end
-})
+--Bloxfruit4:AddButton({
+--    Name = "Test Lever",
+--    Click = "Lever",
+--    Default = false,
+--    Save = false,
+--   Callback = function(Value)
+--        if Value then
+--        else
+--        end
+--    end
+--})
 
 --------------------------------------------------
 -- SETTING
@@ -898,44 +858,6 @@ Setting:AddButton({
     Click = "Button",
     Callback = function()
         loadstring(game:HttpGet("https://raw.githubusercontent.com/voquochung2369-creator/ScriptFastmode/refs/heads/main/Fastmode"))()
-    end
-})
-
-Setting2:AddButton({
-    Name = "Test 2",
-    Click = "Button",
-    Callback = function()
-    end
-})
-
-Setting3:AddButton({
-    Name = "Test Lever",
-    Click = "Lever",
-    Default = false,
-    Save = false,
-    Callback = function(Value)
-        if Value then
-        else
-        end
-    end
-})
-
-Setting4:AddButton({
-    Name = "Saved Lever",
-    Click = "Lever",
-    Default = true,
-    Save = true,
-    Callback = function(Value)
-        if Value then
-        else
-        end
-    end
-})
-
-Setting5:AddButton({
-    Name = "Test 5",
-    Click = "Button",
-    Callback = function()
     end
 })
 
@@ -954,9 +876,13 @@ HubButton.MouseButton1Click:Connect(function()
     MenuUi.Enabled = not MenuUi.Enabled
 
     if MenuUi.Enabled then
+        -- BẬT:
+        -- viền trắng đậm và dày
         HubStroke.Thickness = 2.5
         HubStroke.Transparency = 0.05
     else
+        -- ẨN:
+        -- viền trắng mỏng và hơi mờ
         HubStroke.Thickness = 1
         HubStroke.Transparency = 0.45
     end
@@ -1023,9 +949,6 @@ if Window.Tabs[1] then
     SelectTab(Window.Tabs[1])
 end
 
---------------------------------------------------
--- HUB UI MẶC ĐỊNH
---------------------------------------------------
-
+-- Mặc định Menu đang ẩn
 HubStroke.Thickness = 1
 HubStroke.Transparency = 0.45
